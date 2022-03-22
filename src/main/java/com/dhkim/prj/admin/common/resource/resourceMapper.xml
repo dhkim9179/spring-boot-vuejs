@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dhkim.prj.admin.common.resource.ResourceMapper">
+	<!-- 리소스 조회 -->
+	<select id="findResourceList" parameterType="object" resultType="resource">
+		SELECT
+			 R.RESOURCE_ID
+			,R.RESOURCE_NAME
+			,R.RESOURCE_PATTERN url
+		    ,AR.AUTHORITY_ID authority
+		FROM
+			RESOURCES R
+		    JOIN AUTHORITY_RESOURCES AR ON R.RESOURCE_ID = AR.RESOURCE_ID
+		WHERE AR.AUTHORITY_ID = #{authority}
+	</select>
+</mapper>

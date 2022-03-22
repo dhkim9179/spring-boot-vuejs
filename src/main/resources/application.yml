@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: admin
+  cloud:
+    config:
+      fail-fast: true
+      
+---
+spring:
+  config.activate.on-profile: local
+  config:
+    import: optional:configserver:http://localhost:16080

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhkim.prj.admin.qna.QnaMapper">
+
+	<select id="getQnaList" parameterType="map" resultType="Qna">
+	<include refid="com.dhkim.prj.admin.common.pagingHeader"/>
+		SELECT
+			QNA_SNO
+			,(SELECT DETAIL_CODE_NAME FROM COMMON_CODE_DETAIL WHERE CODE_ID = 'QNA_CATEGORY' AND DETAIL_CODE_ID = QUESTION_CATEGORY) questionCategory
+			,QUESTION_TITLE
+			,QUESTION_CONTENT
+			,CREATE_DATETIME
+			,CREATE_USER_ID
+			,CASE
+				WHEN ANSWER IS NOT NULL THEN '답변있음' ELSE '답변없음'
+			 END answer	
+			,ANSWER_DATETIME
+			,ANSWER_USER_ID
+		FROM QNA
+		WHERE QUESTION_TITLE LIKE CONCAT(#{sc.questionTitle},'%')
+		<if test='sc.answer.equals("Y")'>
+		AND ANSWER IS NOT NULL
+		</if> 
+		<if test='sc.answer.equals("N")'>
+		AND ANSWER IS NULL
+		</if> 
+		<if test="sc.startDate != ''">
+			<if test="sc.endDate != ''">
+		AND CREATE_DATETIME BETWEEN CONCAT(#{sc.startDate}, '000000') AND CONCAT(#{sc.endDate}, '235959')	
+			</if>
+		</if>
+	<include refid="com.dhkim.prj.admin.common.pagingFooter"/>	
+	</select>
+	
+	<select id="countQnaList" parameterType="map" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM QNA
+		WHERE QUESTION_TITLE LIKE CONCAT(#{sc.questionTitle},'%')
+		<if test='sc.answer.equals("Y")'>
+		AND ANSWER IS NOT NULL
+		</if> 
+		<if test='sc.answer.equals("N")'>
+		AND ANSWER IS NULL
+		</if> 
+		<if test="sc.startDate != ''">
+			<if test="sc.endDate != ''">
+		AND CREATE_DATETIME BETWEEN CONCAT(#{sc.startDate}, '000000') AND CONCAT(#{sc.endDate}, '235959')	
+			</if>
+		</if>
+	</select>
+	
+	<insert id="registerQna">
+		INSERT INTO QNA (
+			QNA_SNO
+			,QUESTION_CATEGORY
+			,QUESTION_TITLE
+			,QUESTION_CONTENT
+			,CREATE_DATETIME
+			,CREATE_USER_ID
+		)
+		VALUES (
+			(SELECT CONCAT((SELECT DATE_FORMAT(CURRENT_DATE, '%Y%m%d%H%i%s')), (SELECT LPAD((SELECT NEXTVAL(SEQ_TEST_SNO)), 6, '0'))))
+			,#{questionCategory}
+			,#{questionTitle}
+			,#{questionContent}
+			,DATE_FORMAT(NOW(),'%Y%m%d%H%i%S')
+			,#{createUserId}
+		)
+	</insert>
+	
+	<update id="modifyQna" parameterType="String">
+		UPDATE QNA
+		SET ANSWER = #{answer}
+			,ANSWER_USER_ID = #{answerUserId}
+			,ANSWER_DATETIME = DATE_FORMAT(NOW(),'%Y%m%d%H%i%S')
+		WHERE QNA_SNO = #{qnaSno}
+	
+	</update>
+	
+	<select id="getQna" parameterType="string" resultType="Qna">
+		SELECT
+			QNA_SNO
+			,QUESTION_CATEGORY
+			,QUESTION_TITLE
+			,QUESTION_CONTENT
+			,ANSWER
+		FROM QNA
+		WHERE QNA_SNO = #{qnaSno}
+	</select> 
+</mapper>
