@@ -10,7 +10,7 @@ Vue.component("selection", {
           ',
 
   props: ['label', 'type', 'codeId', 'condition', 'message'],
-  data: function() {
+  data: function() {			
     return {
       selectType: '',
       selectCodeId: '',

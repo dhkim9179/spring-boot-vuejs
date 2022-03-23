@@ -8,9 +8,7 @@
 		<version>2.6.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.dhkim</groupId>
-	<artifactId>prj</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>com.dhkim.prj</groupId>
 	<packaging>war</packaging>
 	<name>myAdmin</name>
 	<description>Dhkim Test Admin Project</description>
@@ -214,4 +212,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<artifactId>admin</artifactId>
+	<version>1.0.0</version>
 </project>
