@@ -10,3 +10,9 @@ spring:
   config.activate.on-profile: local
   config:
     import: optional:configserver:http://localhost:16080
+    
+---
+spring:
+  config.activate.on-profile: dev
+  config:
+    import: optional:configserver:http://172.105.236.96:16080    
